@@ -24,6 +24,5 @@ hs_err_pid*
 
 # mac directory
 .idea/
-target
 .DS_Store
 .DS_Store/
