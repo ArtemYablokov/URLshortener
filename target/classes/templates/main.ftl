@@ -27,7 +27,7 @@
                 <div class="form-group col-md-6">
                     <input type="text"  class="form-control" name="tag" placeholder="Tag">
                 </div>
-                <input type="hidden" name="_csrf" value="${_csrf.token}" />
+<#--                <input type="hidden" name="_csrf" value="${_csrf.token}" />-->
                 <div class="form-group col-md-6">
                     <div class="custom-file">
                         <input type="file" name="file" id="customFile">

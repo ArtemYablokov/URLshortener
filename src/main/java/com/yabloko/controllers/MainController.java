@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 //@RestController - для реализации REST
 @Controller
 public class MainController {
-    @GetMapping("/")
-    public String getMainPage(){
+    @GetMapping("/main")
+    public String getMainPage(Model model) {
         System.out.println("req");
         return "main";
     }
