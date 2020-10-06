@@ -3,7 +3,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>Login</title>
+    <title>UrlShort</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link href="/static/css/style.css" rel="stylesheet" type="text/css"/>
     <script src="form.js"></script>

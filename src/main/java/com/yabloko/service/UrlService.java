@@ -2,39 +2,40 @@ package com.yabloko.service;
 
 import com.yabloko.models.UrlObject;
 import com.yabloko.repositories.UrlRepository;
-import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.net.URL;
+import java.util.List;
 import java.util.Optional;
+
+import static com.yabloko.Application.urlRepository;
 
 @Service
 public class UrlService {
+    @Value("${host.prefix}")
+    private String hostPrefix;
     @Autowired
     UrlRepository urlRepository;
-
     @Autowired
     SuffixGenerator suffixGenerator;
 
-    public String findByShortUrl(String shortUrl){
-        Optional<UrlObject> byShortUrl = urlRepository.findByShortUrl(shortUrl);
+    public String findBySuffixUrlHashId(String suffix) {
+        String userUrl = hostPrefix + "errorurl";
+        Long shortUrlHashId = suffixGenerator.generateHashCode(suffix);
+        List<UrlObject> urlObjectList = urlRepository.findByShortUrlHashId((shortUrlHashId));
 
-        return null;
-    }
-
-    public String findByShortHashId(Long shortHashId) {
-        Optional<UrlObject> byShortHashId = urlRepository.findByShortHashId(shortHashId);
-
-        return null;
+        if (urlObjectList.size() == 1)
+            userUrl = urlObjectList.get(0).getUserUrl();
+        return userUrl;
     }
 
     public String saveAndReturnShort(String userUrl) {
+        String shortUrlSuffix = suffixGenerator.generateShortUrlSuffix();
+        Long shortUrlHashId = suffixGenerator.generateHashCode(shortUrlSuffix);
+        String shortUrl = hostPrefix + shortUrlSuffix;
 
-        String shortUrl = suffixGenerator.generateShortUrl(userUrl);
-        Long shortHashId = suffixGenerator.generateHashCode(shortUrl);
-        UrlObject urlObject = new UrlObject(shortHashId, userUrl, shortUrl);
-
+        UrlObject urlObject = new UrlObject(shortUrlHashId, userUrl, shortUrl);
         urlRepository.saveAndFlush(urlObject);
         return shortUrl;
     }
@@ -44,4 +45,8 @@ public class UrlService {
         return optional.orElseGet(() -> new UrlObject(0L, "null", "null"));
     }
 
+    public String findByShortUrl(String shortUrl){
+//        Optional<UrlObject> byShortUrl = urlRepository.findByShortUrl(shortUrl);
+        return null;
+    }
 }

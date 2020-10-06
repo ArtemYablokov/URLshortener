@@ -1,7 +1,7 @@
 <#import "parts/common.ftl" as c>
 
 <@c.page>
-    <div>URL</div>
+    <div>Insert your url</div>
     <div>${allert!}</div>
     <form action="/main" method="post" class="form-style-7">
         <input type="text" name="userUrl"
@@ -12,7 +12,7 @@
         <#if shortUrl??>
             <input type="text" name="shortUrl"
                    placeholder=""
-                   value="${shortUrl}" width="50%">
+                   value="${shortUrl}">
         </#if>
     </form>
 
