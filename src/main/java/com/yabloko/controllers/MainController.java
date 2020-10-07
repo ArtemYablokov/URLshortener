@@ -1,4 +1,4 @@
-package com.yabloko;
+package com.yabloko.controllers;
 
 import com.yabloko.models.UrlObject;
 import com.yabloko.service.UrlService;
@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,6 +24,7 @@ import static com.yabloko.Application.urlRepository;
 
 //@RestController
 @Controller
+@RequestMapping("/get")
 public class MainController {
 
     private static final String REGEX = "((http|https)://)(www.)?" /*https://www.*/
@@ -79,37 +81,37 @@ public class MainController {
     }
 
     // 5 сек для 1000 вставок
-    @GetMapping("/insert")
-    public String insert() {
-        String commonUrl = "https://google.com/";
-        String userUrl = "";
-        userUrl = commonUrl + "/suffix";
-        urlService.saveAndReturnShort(userUrl);
-        return "main";
-    }
+//    @GetMapping("/insert")
+//    public String insert() {
+//        String commonUrl = "https://google.com/";
+//        String userUrl = "";
+//        userUrl = commonUrl + "/suffix";
+//        urlService.saveAndReturnShort(userUrl);
+//        return "main";
+//    }
 
     // 2 сек
-    @GetMapping("/check")
-    public String check() {
-
-        Set<Long> hashes = new HashSet<>();
-        Set<String> shortUrls = new HashSet<>();
-        Set<String> urls = new HashSet<>();
-
-        for (long i = 1; i < 1_001; i++) {
-            UrlObject urlObject = urlService.findById(i);
-
-            shortUrls.add(urlObject.getShortUrl());
-            hashes.add(urlObject.getShortUrlHashId());
-            urls.add(urlObject.getUserUrl());
-        }
-
-        System.out.println(hashes.size());
-        System.out.println(shortUrls.size());
-        System.out.println(urls.size());
-
-        return "main";
-    }
+//    @GetMapping("/check")
+//    public String check() {
+//
+//        Set<Long> hashes = new HashSet<>();
+//        Set<String> shortUrls = new HashSet<>();
+//        Set<String> urls = new HashSet<>();
+//
+//        for (long i = 1; i < 1_001; i++) {
+//            UrlObject urlObject = urlService.findById(i);
+//
+//            shortUrls.add(urlObject.getShortUrl());
+//            hashes.add(urlObject.getShortUrlHashId());
+//            urls.add(urlObject.getUserUrl());
+//        }
+//
+//        System.out.println(hashes.size());
+//        System.out.println(shortUrls.size());
+//        System.out.println(urls.size());
+//
+//        return "main";
+//    }
 
     @GetMapping("/errorurl")
     public String test(Model model, ModelAndView modelAndView, @RequestParam(required = false)String userSuffix) {

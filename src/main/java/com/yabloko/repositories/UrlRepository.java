@@ -22,8 +22,10 @@ public interface UrlRepository extends JpaRepository<UrlObject, Long> {
 //    @Query(value = "SELECT user_url FROM url u where u.shortUrlHashId = :short_url_hash_id")
 //    String getIt(@Param("short_url_hash_id") Long urlObject);
 
-    // запускается - потому что запрос к ОБЪЕКТУ а не таблице
     @Query("FROM UrlObject WHERE short_url_hash_id = ?1")
-    List<UrlObject> findByShortUrlHashId(Long short_url_hash_id);
+    List<UrlObject> findBySuffixHashId(Long short_url_hash_id);
+
+    UrlObject findByUserUrl(String userUrl);
+    UrlObject findByShortUrl(String shortUrl);
 
 }

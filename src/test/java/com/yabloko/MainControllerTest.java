@@ -1,12 +1,11 @@
 package com.yabloko;
 
+import com.yabloko.controllers.MainController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -18,62 +17,56 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-//import static org.hamcrest.core.StringContains.containsString;
+// import static org.hamcrest.core.StringContains.containsString;
 
+@AutoConfigureMockMvc
 // создает структуру классов, которфе авто подменяют слой MVC -> все будет происходить в ФЕЙК-окружении
 // в результате не нужно создавать REST-темплейт
-@AutoConfigureMockMvc
-//@TestPropertySource("/application-test.properties")
-
-// аннотации которые нужны для класса ТЕСТ
 @RunWith(SpringRunner.class) // указываем окружение которое стартует наши тесты
 @SpringBootTest
-public class LoginTest {
+public class MainControllerTest {
     @Autowired
     private MainController controller;
     @Autowired
     private MockMvc mockMvc;
 
-    //аннотация метода ТЕСТ
+    //простая проверка что Контроллер подтянут в КОНТЕКСТ
     @Test
-    //простая проверка что Контроллер подтянут
     public void contextTest() throws Exception {
         assertThat(controller).isNotNull();
     }
 
     @Test
-    public void MockMvcTest() throws Exception {
+    public void getMainPage() throws Exception {
         // Запрос через подмененный MVC-слой
         this.mockMvc.perform(get("/main"))
                 .andDo(print())
                 .andExpect(status().isOk()) // обертка над методом assertThat
                 .andExpect(content().string(containsString("Insert your url")))
-                .andExpect(content().string(containsString("UrlShort")))
-        ;
+                .andExpect(content().string(containsString("UrlShort")));
     }
 
     @Test
-    public void accessDeniedTest() throws Exception {
-        this.mockMvc.perform(get("/main"))
+    public void emptyUrl() throws Exception {
+        this.mockMvc.perform(post("/main").param("userUrl", ""))
                 .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("http://localhost/login"));
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("URL must not be empty")));
     }
 
     @Test
-    public void badCredentials() throws Exception {
-        this.mockMvc.perform(post("/login").param("username", "jonh"))
+    public void withSpaceUrl() throws Exception {
+        this.mockMvc.perform(post("/main").param("userUrl", "https://ya ndex.ru"))
                 .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("URL must not contain spaces")));
     }
 
     @Test
-    @Sql(value = {"/create-user-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    public void correctLoginTest() throws Exception {
-        this.mockMvc.perform(formLogin().user("admin").password("admin"))
-//                .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"))
-        ;
+    public void wrongRegionUrl() throws Exception {
+        this.mockMvc.perform(post("/main").param("userUrl", "https://yandex.r"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("URL is incorrect regex")));
     }
 }
