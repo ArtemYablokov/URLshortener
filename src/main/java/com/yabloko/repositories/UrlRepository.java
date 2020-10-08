@@ -26,6 +26,5 @@ public interface UrlRepository extends JpaRepository<UrlObject, Long> {
     List<UrlObject> findBySuffixHashId(Long short_url_hash_id);
 
     UrlObject findByUserUrl(String userUrl);
-    UrlObject findByShortUrl(String shortUrl);
 
 }

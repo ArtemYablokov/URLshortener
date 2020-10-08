@@ -21,17 +21,14 @@ public class UrlService {
         String userUrl = hostPrefix + "errorurl";
         Long shortUrlHashId = generateHashCode(suffix);
         List<UrlObject> urlObjectList = urlRepository.findBySuffixHashId((shortUrlHashId));
-        UrlObject urlObjectList2 = urlRepository.findByShortUrl((hostPrefix + suffix));
 
         if (urlObjectList.size() == 1){
             userUrl = urlObjectList.get(0).getUserUrl();
         }
-
         return userUrl;
     }
 
     public String saveAndReturnShort(String userUrl) {
-
         UrlObject urlExists = urlRepository.findByUserUrl(userUrl);
         if (urlExists != null)
             return "URL already exists!";
@@ -64,17 +61,9 @@ public class UrlService {
         return suffix;
     }
 
-
     public UrlObject findById(Long id){
         Optional<UrlObject> optional = urlRepository.findById(id);
         return optional.orElseGet(() -> new UrlObject(0L, "null", "null"));
     }
 
-
-
-
-//    public String findByShortUrl(String shortUrl){
-////        Optional<UrlObject> byShortUrl = urlRepository.findByShortUrl(shortUrl);
-//        return null;
-//    }
 }
